@@ -24,7 +24,7 @@ class audioData:
         else:
             self.channels = 1
 
-    def save(self,filepath,bitrate = '322k',outFormat = 'mp3'):
+    def save(self,filepath,bitrate = '322k'):
 
         ### save the audio data stored in 'self.data' to the 'filepath' with the selected bitrate (str,322k by default) and output format (both must be ffmpeg compatible)
         auxPath = filepath.split('.')[0] + '.wav'
