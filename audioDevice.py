@@ -1,6 +1,6 @@
 import pyaudio
 import numpy as np
-from utils import printInPlace
+from utils import printInPlace,toText
 from audioData import audioData
 
 class audioDevice:
@@ -49,7 +49,7 @@ class audioDevice:
         stream.stop_stream()
         stream.close()
         recAudio = self.streamToNumpy(recAudio)
-        recording = audioData(from_dataArray = recAudio,channels =  self.channels,rate = self.rate,fmt = self.fmt)
+        recording = audioData(source = recAudio,rate = self.rate)
         return recording
     
     def recordOnSound(self,f_thr = 3,silenceStopTime = 1):
@@ -84,7 +84,7 @@ class audioDevice:
         print('No sound detected, stop recording...')
 
         recAudio = self.streamToNumpy(recAudio)
-        recording = audioData(from_dataArray = recAudio,channels =  self.channels,rate = self.rate,fmt = self.fmt)
+        recording = audioData(source = recAudio,rate = self.rate)
         return recording       
 
     
@@ -111,7 +111,7 @@ AD = audioDevice(rate=44100)
 
 while True:
     recording = AD.recordOnSound()
-    speech = recording.toText()
+    speech = toText(recording)
     print(speech)
 # recording = AD.recordTime(recTimeSeconds = 60)
 # recording.save('/home/miguel/audio.mp3')
