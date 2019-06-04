@@ -24,12 +24,12 @@ class audioData:
         else:
             self.channels = 1
 
-    def save(self,filepath,bitrate = '322k'):
+    def write(self,filepath,bitrate = '322k'):
 
         ### save the audio data stored in 'self.data' to the 'filepath' with the selected bitrate (str,322k by default) and output format (both must be ffmpeg compatible)
         auxPath = filepath.split('.')[0] + '.wav'
         wavfile.write(auxPath,self.rate,self.data)
-        mp3ConvCommand = ['ffmpeg','-y','-i',auxPath,'-vn','-ar',str(self.rate),'-ac',str(self.channels),'-b:a',bitrate,filepath]
+        mp3ConvCommand = ['ffmpeg','-y','-i',auxPath,'-vn','-ac',str(self.channels),'-b:a',bitrate,filepath]
         call(mp3ConvCommand, stderr=DEVNULL, stdout=DEVNULL)
         os.remove(auxPath)
 
@@ -51,13 +51,13 @@ class audioData:
             self.data = self.data.astype(float)
             self.data = np.mean(self.data,axis=1)
             self.data = self.data.astype(self.dtype)
-        return self.data
+            self.channels = 1
     
     def toStereo(self):
         ##### converts the audio data from mono to stereo
         if self.channels == 1:
             self.data = np.stack((self.data,self.data),axis=1)
+            self.channels = 2
 
-        return self.data
 
 
