@@ -1,6 +1,6 @@
 import pyaudio
 import numpy as np
-from utils import printInPlace,getMaxIntensity,toText
+from utils import printInPlace,getMaxIntensity
 from audioData import audioData
 
 class audioDevice:
@@ -102,21 +102,3 @@ class audioDevice:
     
     def release(self):
         self.audio.terminate()
-
-    
-
-
-
-AD = audioDevice(rate=44100)
-AD.calibrate()
-while True:
-    recording = AD.recordOnSound()
-    speech = toText(recording)
-    print(speech)
-# recording = AD.recordTime(recTimeSeconds = 60)
-# recording.save('/home/miguel/audio.mp3')
-
-# recLoad = audioData(from_filepath='/home/miguel/audio.mp3')
-
-# AD.playAudio(recording)
-
