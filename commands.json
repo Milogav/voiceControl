@@ -1,4 +1,24 @@
 {
-    "abrir gedit" : "gedit",
-    "abrir chrome" : "google-chrome"
+"abrir gedit" : "gedit",
+"cerrar gedit" : "killall gedit",
+
+"abrir chrome" : "google-chrome",
+"cerrar chrome" : "killall chrome",
+
+"abrir nautilus" : "nautilus",
+
+"abrir idle" : "idle",
+"cerrar idle" : "killall idle",
+
+"abrir firefox" : "firefox",
+"cerrar firefox" : "killall firefox",
+
+"abrir visual studio code" : "code",
+"cerrar visual studio code" : "killall code",
+"abrir code" : "code",
+"cerrar code" : "killall code",
+
+"abrir terminal" : "gnome-terminal",
+"cerrar terminal" : "killall gnome-terminal"
+
 }

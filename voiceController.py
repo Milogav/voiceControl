@@ -1,7 +1,7 @@
 from pyaudio import paInt16
 from audioDevice import audioDevice
 import json
-from subprocess import check_output,CalledProcessError,call,DEVNULL,getoutput
+from subprocess import Popen
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
@@ -28,7 +28,7 @@ class voiceController(audioDevice):
             speech = self.speechToText(recording).lower()
             try:
                 cmd = self.commands[speech]
-                check_output(cmd,shell=True)    
+                p = Popen(cmd,shell = True)    
             except KeyError:
                 print('Command error: "%s" not in command json' % speech)
                 continue
