@@ -6,6 +6,7 @@ import re
 import numpy as np
 from scipy.io import wavfile
 import os
+from copy import deepcopy
 
 def printInPlace(text):
     print('\r'+text+'\t'*5,end='',sep = '')
@@ -15,7 +16,8 @@ def toText(audio,language = 'es-ES'):
         ##### language = string specifying the language in a format accepted by the google speech recognition API
         
         flacPath = 'audioSample.flac'
-        sample = audio
+        sample = deepcopy(audio)
+        
         sample.toMono()
         sample.write(flacPath)
         with open(flacPath,'rb') as f:
@@ -31,7 +33,7 @@ def toText(audio,language = 'es-ES'):
         }))
         request = Request(url, data=flacBytes, headers={"Content-Type": 'audio/x-flac; rate=%d' % audio.rate})
     
-        #os.remove(flacPath)
+        os.remove(flacPath)
 
         try:
             response = urlopen(request, timeout=5)
