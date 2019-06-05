@@ -1,6 +1,6 @@
 import pyaudio
 import numpy as np
-from utils import printInPlace,toText
+from utils import printInPlace,getMaxIntensity,toText
 from audioData import audioData
 
 class audioDevice:
@@ -11,15 +11,12 @@ class audioDevice:
         self.chunkSize = chunkSize
         self.fmt = fmt
         self.audio = pyaudio.PyAudio()
-        self.noiseIntensityThreshold = self.calibrate()
-    
-    def getMaxIntensity(self,audio):
-        return np.max(np.abs(audio.data))
-    
+        self.noiseIntensityThreshold = None
+
     def calibrate(self):
         print('Calibrating ambient noise threshold (be silent)...')
         recording = self.recordTime(5)
-        return self.getMaxIntensity(recording)
+        self.noiseIntensityThreshold = getMaxIntensity(recording.data)
     
     def streamToNumpy(self,audioChunks):
         recAudio = b''.join(audioChunks)
@@ -36,12 +33,12 @@ class audioDevice:
                             input = True,
                             frames_per_buffer = self.chunkSize)
 
-        print('\n\nRecording (%.2f sec.) ...' % recTimeSeconds)
+        print('')
         recAudio = list()
         for t in range(0,int(self.rate / self.chunkSize * recTimeSeconds)):
             elapsed = t * self.chunkSize / self.rate
             remTime = recTimeSeconds - elapsed
-            printInPlace('    Remaining time: %.2f sec.' %remTime)
+            printInPlace('Recording (%.2f sec.) -- Remaining time: %.2f sec.' % (recTimeSeconds,remTime))
             data = stream.read(self.chunkSize)
             recAudio.append(data)
 
@@ -53,6 +50,9 @@ class audioDevice:
         return recording
     
     def recordOnSound(self,f_thr = 3,silenceStopTime = 1):
+        if self.noiseIntensityThreshold is None:
+            self.calibrate()
+
         silence = True
         stream = self.audio.open(format = self.fmt,
                             channels = self.channels,
@@ -64,7 +64,7 @@ class audioDevice:
         while silence:
             data = stream.read(self.chunkSize)
             audioSample = self.streamToNumpy([data])
-            maxIn = self.getMaxIntensity(audioSample)
+            maxIn = getMaxIntensity(audioSample)
             if maxIn > f_thr * self.noiseIntensityThreshold:
                 print('\nSound detected. Recording...')
                 silence = False
@@ -76,7 +76,7 @@ class audioDevice:
             data = stream.read(self.chunkSize)
             recAudio.append(data)
             audioSample = self.streamToNumpy([data])
-            maxIn = self.getMaxIntensity(audioSample)
+            maxIn = getMaxIntensity(audioSample)
             if maxIn < f_thr * self.noiseIntensityThreshold:
                 silenceLoopCount += 1
             else:
@@ -108,7 +108,7 @@ class audioDevice:
 
 
 AD = audioDevice(rate=44100)
-
+AD.calibrate()
 while True:
     recording = AD.recordOnSound()
     speech = toText(recording)

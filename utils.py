@@ -11,6 +11,9 @@ from copy import deepcopy
 def printInPlace(text):
     print('\r'+text+'\t'*5,end='',sep = '')
 
+def getMaxIntensity(audioArray):
+    return np.max(np.abs(audioArray))
+
 def toText(audio,language = 'es-ES'):
         ##### audio = audioData instance, audio data array must be of type np.int16
         ##### language = string specifying the language in a format accepted by the google speech recognition API
