@@ -8,17 +8,17 @@ from urllib.error import URLError, HTTPError
 import re 
 import os
 import numpy as np
+import pandas as pd
 
 class voiceController(audioDevice):
 
-    def __init__(self,commandsJsonFile,language = 'es-ES'):
+    def __init__(self,commandTablePath,language = 'es-ES'):
         ##### commandsJsonFile = string specifying the path to the json file defining the available commands
         ##### language = string specifying the language in a format accepted by the google speech recognition API
 
         audioDevice.__init__(self,rate = 44100,channels = 1,fmt = paInt16)
         self.calibrate()
-        with open(commandsJsonFile,'r') as f:
-            self.commands = json.load(f)
+        self.commandTable = pd.read_csv(commandTablePath,index_col=0)
         self.language = language
     
     def start(self):
@@ -26,11 +26,18 @@ class voiceController(audioDevice):
         while True:
             recording = self.recordOnSound()
             speech = self.speechToText(recording).lower()
+            words = speech.split(' ')
+            order = words[0]
+            if len(words) > 1:
+                args = ' '.join(words[1::])
+            else:
+                args = '#empty#'
+
             try:
-                cmd = self.commands[speech]
+                cmd = self.commandTable.loc[args,order]
                 p = Popen(cmd,shell = True)    
             except KeyError:
-                print('Command error: "%s" not in command json' % speech)
+                print('Command error: "%s" command not available' % speech)
                 continue
             except Exception as e:
                 print(e)

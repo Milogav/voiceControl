@@ -4,7 +4,8 @@ import os
 if __name__ == '__main__':
 
     cwd = os.path.dirname(os.path.realpath(__file__))
-    commandJsonPath = os.path.join(cwd,'commands.json')
+    language='es-ES'
+    commandTablePath = os.path.join(cwd,'commands_%s.table' % language)
 
-    vc = voiceController(commandJsonPath,language='es-ES')
+    vc = voiceController(commandTablePath,language=language)
     vc.start()

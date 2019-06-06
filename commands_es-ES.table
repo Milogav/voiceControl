@@ -1,0 +1,9 @@
+,abrir,cerrar
+chrome,google-chrome,killall chrome
+gedit,gedit,killall gedit
+nautilus,nautilus,
+idle,idle,killall idle
+firefox,firefox,killall firefox
+code,code,killall code
+terminal,gnome-terminal,killlall gnome-terminal
+#empty#,,
