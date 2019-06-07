@@ -1,6 +1,5 @@
 from pyaudio import paInt16
 from audioDevice import audioDevice
-import json
 from subprocess import Popen
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -33,7 +32,7 @@ def on_press(key):
 class voiceController(audioDevice):
 
     def __init__(self,commandTablePath,language = 'es-ES'):
-        ##### commandsJsonFile = string specifying the path to the json file defining the available commands
+        ##### commandTablePath = string specifying the path to the command table csv file
         ##### language = string specifying the language in a format accepted by the google speech recognition API
 
         audioDevice.__init__(self,rate = 44100,channels = 1,fmt = paInt16)
