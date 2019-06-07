@@ -9,6 +9,26 @@ import re
 import os
 import numpy as np
 import pandas as pd
+from pynput import keyboard
+
+commandMode = True
+shiftStrokes = 0
+def on_press(key):
+
+    global shiftStrokes
+    global commandMode
+    if key == keyboard.Key.shift:
+        shiftStrokes += 1
+    else:
+        shiftStrokes = 0
+    
+    if shiftStrokes == 3:
+        commandMode = not(commandMode)
+        if commandMode:
+            print('Switched to command mode\n')
+        else:
+            print('Switched to writing mode\n')
+        shiftStrokes = 0
 
 class voiceController(audioDevice):
 
@@ -22,25 +42,33 @@ class voiceController(audioDevice):
         self.language = language
     
     def start(self):
-
+        listener = keyboard.Listener(on_press=on_press)
+        listener.start() ###### start keyboard listener in a separate thread
+        ####### Switch between 'command' and' writing' modes by pressing the shift key 3 consecutive times
+        keyboardController = keyboard.Controller() ####### object to control the keyboard, used in 'writing' mode
         while True:
             recording = self.recordOnSound()
-            speech = self.speechToText(recording).lower()
-            words = speech.split(' ')
-            order = words[0]
-            if len(words) > 1:
-                args = ' '.join(words[1::])
-            else:
-                args = '#empty#'
+            speech = self.speechToText(recording).lower().strip()
+            if commandMode == True:
+                words = speech.split(' ')
+                order = words[0]
+                if len(words) > 1:
+                    args = ' '.join(words[1::])
+                else:
+                    args = '#empty#'
 
-            try:
-                cmd = self.commandTable.loc[args,order]
-                p = Popen(cmd,shell = True)    
-            except KeyError:
-                print('Command error: "%s" command not available' % speech)
-                continue
-            except Exception as e:
-                print(e)
+                try:
+                    cmd = self.commandTable.loc[args,order]
+                    p = Popen(cmd,shell = True)    
+                except KeyError:
+                    print('Command error: "%s" command not available' % speech)
+                    continue
+                except Exception as e:
+                    print(e)
+
+            else:
+                if not(speech == '*error*'):
+                    keyboardController.type(speech + ' ')
     
     def speechToText(self,audio):
         ##### audio = audioData instance, audio data array must be of type np.int16 and mono channel

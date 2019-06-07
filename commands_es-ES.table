@@ -6,4 +6,7 @@ idle,idle,killall idle
 firefox,firefox,killall firefox
 code,code,killall code
 terminal,gnome-terminal,killlall gnome-terminal
+youtube,google-chrome youtube.com,
+gmail,google-chrome gmail.com,
+vlc,vlc,killall vlc
 #empty#,,
