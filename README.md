@@ -5,7 +5,7 @@ Python library to give voice commands to the computer.
 The program is started by running the 'run.py' script in the terminal. E.g. python3 ~/voiceControl/run.py
 
 In the **first 5 seconds** after launching, a simple **calibration** is done to account for the ambient sound intensity, so the user must **be silent** during this step.
-The program works by recording audio from the microphone and sending it as a flac file to the google speech recognition API. It then catches the text resulting from the speech recognition. 
+The program works by recording audio from the microphone and sending it as a flac file to the google speech recognition API. It then catches the text resulting from the speech recognition. The code for making the requests to the API and catching the result where taken from: https://github.com/Uberi/speech_recognition
 The program starts recording audio if the sound intensity surpasses the intensity threshold estimated during the calibration step by a certain margin. The recording stops if the received audio stream has not surpassed this margin for 1 second.
 
 The program has **two operation modes**:
@@ -33,7 +33,7 @@ To add a new order without entries, add the command action in the corresponding 
 - ffmpeg (for audio conversion)
 - google speech recognition web API
 
-Tested over python 3.6 and Ubunut 18.04
+Tested over python 3.6 and Ubuntu 18.04
 
 ## TODO: 
 	- Create a GUI
