@@ -39,4 +39,5 @@ Tested over python 3.6 and Ubuntu 18.04
 ## TODO: 
 	- Create a GUI
 	- Add more orders and arguments
+	- Make 'close' orders to act only on the previously 'open' subprocesses (now using killall command, which causes ALL previouly launched processes sharing the name to be killed too)
 	- Add command table files for other languages (currently only spanish)
