@@ -17,7 +17,7 @@ To **switch** between **modes**, press the **shift key 3 times** consecutively.
 
 ## Adding new commands
 New commands and arguments can be added by including more entries in the commands_{lang_code}.table file.
-This file contains a table in csv format in which the first row define the available orders and the first column define the arguments for the orders.
+This file contains a table in csv format in which the first row defines the available orders and the first column defines the arguments for the orders.
 When speaking a request to the computer, the first word will correspond to the order and the remaing words will correspond to the order's arguments. 
 	For example: if one says: "open google chrome", the order would be 'open' and the argument would be 'google chrome'. 
 	The program then looks for the entry located at the table(row = 'google chrome',column = 'open') and executes the defined command action at that entry.
@@ -36,5 +36,6 @@ To add a new order without entries, add the command action in the corresponding 
 Tested over python 3.6 and Ubunut 18.04
 
 ## TODO: 
+	- Create a GUI
 	- Add more orders and arguments
-	- Add command table files for other languages (currently only spanish) 
+	- Add command table files for other languages (currently only spanish)
