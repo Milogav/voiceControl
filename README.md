@@ -2,7 +2,6 @@
 Python library to give voice commands to the computer.
 
 ## Description and usage
-
 The program is started by running the 'run.py' script in the terminal. E.g. python3 ~/voiceControl/run.py
 
 In the **first 5 seconds** after launching, a simple **calibration** is done to account for the ambient sound intensity, so the user must **be silent** during this step.
@@ -16,13 +15,14 @@ The program has **two operation modes**:
 
 To **switch** between **modes**, press the **shift key 3 times** consecutively.
 
+## Adding new commands
 New commands and arguments can be added by including more entries in the commands_{lang_code}.table file.
 This file contains a table in csv format in which the first row define the available orders and the first column define the arguments for the orders.
 When speaking a request to the computer, the first word will correspond to the order and the remaing words will correspond to the order's arguments. 
 	For example: if one says: "open google chrome", the order would be 'open' and the argument would be 'google chrome'. 
-	The program then looks for the entry located at the table(row = 'google chrome',column = 'open') and executes the defined command action at that entry
+	The program then looks for the entry located at the table(row = 'google chrome',column = 'open') and executes the defined command action at that entry.
 
-To add a new order without entries, add the command action in the corresponding column of the row '#emtpy#'
+To add a new order without entries, add the command action in the corresponding column of the row '#empty#'
 
 ## Dependencies:
 - pyaudio (for sound recording)
