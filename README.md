@@ -5,7 +5,7 @@ Python library to give voice commands to the computer.
 
 The program is started by running the 'run.py' script in the terminal. E.g. python3 ~/voiceControl/run.py
 
-In the first 5 seconds after launching, a simple calibration is done to account for the ambient sound intensity, so the user must be silent during this step.
+In the **first 5 seconds** after launching, a simple **calibration** is done to account for the ambient sound intensity, so the user must **be silent** during this step.
 The program works by recording audio from the microphone and sending it as a flac file to the google speech recognition API. It then catches the text resulting from the speech recognition. 
 The program starts recording audio if the sound intensity surpasses the intensity threshold estimated during the calibration step by a certain margin. The recording stops if the received audio stream has not surpassed this margin for 1 second.
 
