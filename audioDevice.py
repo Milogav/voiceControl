@@ -2,6 +2,7 @@ import pyaudio
 import numpy as np
 from utils import printInPlace,getMaxIntensity
 from audioData import audioData
+from time import time
 
 class audioDevice:
 
@@ -49,9 +50,16 @@ class audioDevice:
         recording = audioData(source = recAudio,rate = self.rate)
         return recording
     
-    def recordOnSound(self,f_thr = 3,silenceStopTime = 1):
+    def recordOnSound(self,f_thr = 3,silenceStopTime = 1,timeOut = np.inf):
+        ###### f_thr = intensity threhold factor. Starts recording if the sound intensity is higher than f_thr * calibIntenistyThr
+        ###### silenceStopTime = seconds of silence required to stop the recording after activation
+        ###### timeOut = max seconds to wait for starting a recording.
+
         if self.noiseIntensityThreshold is None:
             self.calibrate()
+        
+        silenceLoopCount = 0
+        maxSilentLoops = int(self.rate * silenceStopTime / self.chunkSize)
 
         silence = True
         stream = self.audio.open(format = self.fmt,
@@ -60,7 +68,7 @@ class audioDevice:
                             input = True,
                             frames_per_buffer = self.chunkSize)
         recAudio = list()
-
+        startTime = time()
         while silence:
             data = stream.read(self.chunkSize)
             audioSample = self.streamToNumpy([data])
@@ -69,9 +77,12 @@ class audioDevice:
                 print('\nSound detected. Recording...')
                 silence = False
                 recAudio.append(data)
+            elif time() - startTime > timeOut:
+                print('TIMEOUT REACHED, aborting the recording...')
+                recAudio = [data]
+                silenceLoopCount = np.inf #### this skips the next while loop
+                break
         
-        silenceLoopCount = 0
-        maxSilentLoops = int(self.rate * silenceStopTime / self.chunkSize)
         while silenceLoopCount < maxSilentLoops:
             data = stream.read(self.chunkSize)
             recAudio.append(data)
@@ -81,7 +92,10 @@ class audioDevice:
                 silenceLoopCount += 1
             else:
                 silenceLoopCount = 0
-        print('No sound detected, stop recording...')
+        print('No sound detected, stopping the recording...')
+
+        stream.stop_stream()
+        stream.close()
 
         recAudio = self.streamToNumpy(recAudio)
         recording = audioData(source = recAudio,rate = self.rate)

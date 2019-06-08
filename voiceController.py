@@ -11,23 +11,41 @@ import pandas as pd
 from pynput import keyboard
 
 commandMode = True
+haltMode = False
 shiftStrokes = 0
+altStrokes = 0
 def on_press(key):
 
     global shiftStrokes
+    global altStrokes
     global commandMode
-    if key == keyboard.Key.shift:
+    global haltMode
+
+    if key == keyboard.Key.shift and not(haltMode):
         shiftStrokes += 1
+        altStrokes = 0
+    elif key == keyboard.Key.alt:
+        altStrokes += 1
+        shiftStrokes = 0
     else:
+        altStrokes = 0
         shiftStrokes = 0
     
-    if shiftStrokes == 3:
+    if shiftStrokes == 2:
         commandMode = not(commandMode)
         if commandMode:
-            print('Switched to command mode\n')
+            print('Switched to command mode...\n')
         else:
-            print('Switched to writing mode\n')
+            print('Switched to writing mode...\n')
         shiftStrokes = 0
+    
+    if altStrokes == 2:
+        haltMode = not(haltMode)
+        if haltMode:
+            print('Application disabled...\n')
+        else:
+            print('Application enabled...\n')
+        altStrokes = 0
 
 class voiceController(audioDevice):
 
@@ -43,31 +61,32 @@ class voiceController(audioDevice):
     def start(self):
         listener = keyboard.Listener(on_press=on_press)
         listener.start() ###### start keyboard listener in a separate thread
-        ####### Switch between 'command' and' writing' modes by pressing the shift key 3 consecutive times
+        ####### Switch between 'command' and' writing' modes by pressing the shift key 2 consecutive times
         keyboardController = keyboard.Controller() ####### object to control the keyboard, used in 'writing' mode
         while True:
-            recording = self.recordOnSound()
-            speech = self.speechToText(recording).lower().strip()
-            if commandMode == True:
-                words = speech.split(' ')
-                order = words[0]
-                if len(words) > 1:
-                    args = ' '.join(words[1::])
+            recording = self.recordOnSound(timeOut=1)
+            if haltMode == False:
+                speech = self.speechToText(recording).lower().strip()
+                if commandMode == True:
+                    words = speech.split(' ')
+                    order = words[0]
+                    if len(words) > 1:
+                        args = ' '.join(words[1::])
+                    else:
+                        args = '#empty#'
+
+                    try:
+                        cmd = self.commandTable.loc[args,order]
+                        p = Popen(cmd,shell = True)    
+                    except KeyError:
+                        print('Command error: "%s" command not available' % speech)
+                        continue
+                    except Exception as e:
+                        print(e)
+
                 else:
-                    args = '#empty#'
-
-                try:
-                    cmd = self.commandTable.loc[args,order]
-                    p = Popen(cmd,shell = True)    
-                except KeyError:
-                    print('Command error: "%s" command not available' % speech)
-                    continue
-                except Exception as e:
-                    print(e)
-
-            else:
-                if not(speech == '*error*'):
-                    keyboardController.type(speech + ' ')
+                    if not(speech == '*error*'):
+                        keyboardController.type(speech + ' ')
     
     def speechToText(self,audio):
         ##### audio = audioData instance, audio data array must be of type np.int16 and mono channel

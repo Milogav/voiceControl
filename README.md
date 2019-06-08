@@ -15,7 +15,8 @@ The program has **two operation modes**:
 1. **Command mode**: this mode allows to give voice commands to the computer. The available commands are defined in the command table file (csv). In this mode, the recognition result is used to launch the specified commands.
 2. **Writing mode**: this mode allows for automatically typing the speech. The speech will be typed in the input field selected by the mouse at that moment.
 
-To **switch** between **modes**, press the **shift key 3 times** consecutively.
+To **switch** between **modes**, press the **shift key 2 times** consecutively.
+To **disable/enable** the application, press the **alt key 2 times** consecutively.
 
 ## Adding new commands
 New commands and arguments can be added by including more entries in the commands_{lang_code}.table file.

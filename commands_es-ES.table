@@ -8,5 +8,6 @@ code,code,killall code
 terminal,gnome-terminal,killlall gnome-terminal
 youtube,google-chrome youtube.com,
 gmail,google-chrome gmail.com,
+netflix,google-chrome netflix.com,
 vlc,vlc,killall vlc
 #empty#,,
