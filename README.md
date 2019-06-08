@@ -16,6 +16,7 @@ The program has **two operation modes**:
 2. **Writing mode**: this mode allows for automatically typing the speech. The speech will be typed in the input field selected by the mouse at that moment.
 
 To **switch** between **modes**, press the **shift key 2 times** consecutively.
+
 To **disable/enable** the application, press the **alt key 2 times** consecutively.
 
 ## Adding new commands
